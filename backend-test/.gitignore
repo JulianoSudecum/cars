@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+
+# Ambiente
+.env
+*.local
+
+# Banco local (caso use sqlite em smoke)
+*.sqlite3
+*.db
+
+# IDE / SO
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.stackdump
