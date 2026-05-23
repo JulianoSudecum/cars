@@ -1,11 +1,9 @@
-# Cars — Desafio WS Work (Front-end + Back-end)
-
-Monorepo com as duas soluções do desafio técnico da WS Work:
+# Cars (Front-end + Back-end)
 
 - **[`frontend-test/`](./frontend-test/README.md)** — Catálogo de veículos em **React (Vite)**: listagem agrupada por marca, filtros/busca, **assistente de IA** (recomendação por perfil) e cadastro.
 - **[`backend-test/`](./backend-test/README.md)** — **API REST em FastAPI** (Marca → Modelo → Carro): CRUD completo, autenticação JWT, **IA** (geração de descrição), endpoint otimizado para o front e Swagger.
 
-> Os dois projetos são **independentes**: o front consome os JSONs públicos da wswork (`cars.json` / `cars_by_brand.json`); a API tem seu próprio banco e dados de seed.
+> Os dois projetos são **independentes**: o front consome os JSONs públicos (`cars.json` / `cars_by_brand.json`); a API tem seu próprio banco e dados de seed.
 
 ---
 
