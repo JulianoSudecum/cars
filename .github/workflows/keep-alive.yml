@@ -1,0 +1,19 @@
+name: keep-alive
+
+# Mantém a API hospedada no Render (free tier) acordada
+# O free tier faz "spin down" após ~15 min de inatividade (cold start de ~50s no
+# acesso seguinte); este ping a cada 10 min evita isso.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /health
+        run: |
+          curl -fsS --max-time 90 https://cars-api-iwxi.onrender.com/health \
+            && echo " -> OK" \
+            || echo "ping falhou (servico sera reativado no proximo acesso)"
