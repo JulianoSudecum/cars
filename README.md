@@ -9,7 +9,7 @@ Monorepo com as duas soluções do desafio técnico da WS Work:
 
 ---
 
-## 🌐 Ambiente de produção
+##  Ambiente de produção
 
 | Projeto | URL |
 |---|---|
@@ -17,11 +17,11 @@ Monorepo com as duas soluções do desafio técnico da WS Work:
 | **Back-end** (Render) | **https://cars-api-iwxi.onrender.com** |
 | **API — Swagger/OpenAPI** | https://cars-api-iwxi.onrender.com/docs |
 
-> ⚠️ **Cold start:** a API está no *free tier* do Render — após ~15 min ociosa ela "dorme" e o **primeiro acesso leva ~50s** para responder; depois fica normal. (Um GitHub Action de *keep-alive* faz ping periódico para reduzir isso.)
+>  **Cold start:** a API está no *free tier* do Render — após ~15 min ociosa ela "dorme" e o **primeiro acesso leva ~50s** para responder; depois fica normal. (Um GitHub Action de *keep-alive* faz ping periódico para reduzir isso.)
 
 ---
 
-## 🗂️ Estrutura do repositório
+##  Estrutura do repositório
 
 ```
 cars/
@@ -35,7 +35,7 @@ Cada subprojeto tem um **README próprio** com arquitetura, decisões técnicas 
 
 ---
 
-## ▶️ Rodando localmente
+##  Rodando localmente
 
 ### Pré-requisitos
 - **Front-end:** Node.js ≥ 20 e npm
