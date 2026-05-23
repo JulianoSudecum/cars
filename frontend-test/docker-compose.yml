@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      # Defina ANTHROPIC_API_KEY no seu ambiente (ou em um arquivo .env ao lado).
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-4-7}
+    restart: unless-stopped
