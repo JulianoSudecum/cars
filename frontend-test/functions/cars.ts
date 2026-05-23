@@ -8,6 +8,9 @@ import { loadCatalog } from '../server/cars/catalog';
  * endpoints da wswork server-side (resolvendo o CORS do navegador) e devolve o
  * catálogo já normalizado. A lógica vive em `loadCatalog`, compartilhada com o
  * BFF de desenvolvimento.
+ *
+ * Esta pasta (`functions/`) é a FONTE; o build (`scripts/build-vercel-api.mjs`)
+ * bundla cada arquivo num `api/*.js` self-contained que o Vercel publica.
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
