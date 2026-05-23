@@ -4,6 +4,10 @@ API REST para um catálogo de veículos com as entidades **Marca → Modelo → 
 CRUD completo, autenticação JWT, geração de descrição de venda via **IA (Claude)**
 e um endpoint otimizado para consumo do front-end.
 
+> 🌐 **API online:** **https://cars-api-iwxi.onrender.com** · **Swagger:** https://cars-api-iwxi.onrender.com/docs
+>
+> Hospedada no Render (Blueprint `render.yaml`: web Docker + PostgreSQL gerenciado). No **free tier**, o serviço "dorme" após ~15 min ocioso; o primeiro acesso seguinte leva ~50s (cold start). Um GitHub Action (`.github/workflows/keep-alive.yml`) faz ping periódico para mantê-la acordada.
+
 ## Stack
 
 - **Python 3.12** · **FastAPI** (Swagger/OpenAPI automático)

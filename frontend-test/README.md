@@ -4,6 +4,10 @@ Aplicação React que exibe um catálogo de veículos **agrupado por marca**, co
 
 Desafio front-end consumindo os endpoints `cars.json` e `cars_by_brand.json` da wswork.
 
+> 🌐 **Demo online:** **https://frontend-test-rho-six.vercel.app**
+>
+> Hospedado na Vercel. O BFF roda como **serverless functions** (`api/*.js`, geradas de `functions/*.ts` por `npm run build:functions`); a chave da IA fica só no servidor. Em desenvolvimento local, use `npm run dev` (front + BFF Express juntos) — e `npm start` (não `vite preview`) para servir o build com a API.
+
 ##  Funcionalidades
 
 -  **Listagem por marca** com filtros (marca, combustível), busca textual e ordenação.
