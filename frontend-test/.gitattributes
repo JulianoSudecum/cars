@@ -1,0 +1,2 @@
+# Normaliza quebras de linha para LF no repositório (consistência Windows/Linux/CI/Docker)
+* text=auto eol=lf
