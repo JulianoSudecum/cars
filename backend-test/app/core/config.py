@@ -50,6 +50,31 @@ class Settings(BaseSettings):
             return [item.strip() for item in value.split(",") if item.strip()]
         return value
 
+    @field_validator("database_url", mode="after")
+    @classmethod
+    def _normalize_database_url(cls, value: str) -> str:
+        """Normaliza a URL para o driver assíncrono (asyncpg).
+
+        Plataformas gerenciadas (Render, Heroku, Railway) injetam a URL como
+        ``postgres://`` ou ``postgresql://`` (driver síncrono); o SQLAlchemy
+        async exige ``postgresql+asyncpg://``. Também remove ``sslmode`` da
+        query — o asyncpg não reconhece esse parâmetro (usa ``ssl=...``).
+        """
+        if value.startswith("postgres://"):
+            value = "postgresql+asyncpg://" + value[len("postgres://") :]
+        elif value.startswith("postgresql://"):
+            value = "postgresql+asyncpg://" + value[len("postgresql://") :]
+
+        if "?" in value:
+            base, _, query = value.partition("?")
+            kept = [
+                part
+                for part in query.split("&")
+                if part and not part.lower().startswith("sslmode=")
+            ]
+            value = base + ("?" + "&".join(kept) if kept else "")
+        return value
+
     @model_validator(mode="after")
     def _validate_production_secrets(self) -> "Settings":
         """Fail-closed: fora de ambientes de desenvolvimento/teste, exige um
