@@ -9,7 +9,15 @@ let cache: { data: NormalizedCar[]; expiresAt: number } | null = null;
 let inflight: Promise<NormalizedCar[]> | null = null;
 
 async function fetchText(url: string): Promise<string> {
-  const res = await fetch(url);
+  // User-Agent/Accept explícitos: alguns servidores (e o host da wswork) recusam
+  // requisições sem User-Agent — comum a partir de IPs de data center (ex.: Vercel).
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (compatible; AutoCatalogo/1.0; +https://github.com/JulianoSudecum/cars)',
+      Accept: 'application/json, text/plain, */*',
+    },
+  });
   if (!res.ok) throw new Error(`Falha ao buscar ${url} (HTTP ${res.status}).`);
   return res.text();
 }

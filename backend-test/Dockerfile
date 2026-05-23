@@ -4,11 +4,6 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
 
-# postgresql-client fornece o pg_isready usado pelo entrypoint.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
 # Instala o pacote (modo editável → uma única cópia de "app" no path).

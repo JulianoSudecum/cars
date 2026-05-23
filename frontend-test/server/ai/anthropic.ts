@@ -15,7 +15,9 @@ export const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-7';
 let client: Anthropic | null = null;
 
 function getClient(): Anthropic {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  // .trim() torna a leitura robusta a espaços/quebras de linha acidentais na
+  // variável de ambiente (ex.: um \r ao configurar a chave via CLI no Windows).
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) throw new MissingApiKeyError();
   if (!client) client = new Anthropic({ apiKey });
   return client;

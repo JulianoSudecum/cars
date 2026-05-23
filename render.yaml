@@ -1,0 +1,46 @@
+# Render Blueprint — Cars API (FastAPI) + PostgreSQL gerenciado.
+#
+# Deploy:
+#   1. https://dashboard.render.com -> New -> Blueprint
+#   2. Conecte este repositório; o Render lê este arquivo automaticamente.
+#   3. Preencha os secrets marcados com sync:false (ANTHROPIC_API_KEY e
+#      CORS_ORIGINS) no dashboard.
+#
+# No boot, o entrypoint aguarda o banco, aplica as migrations (alembic) e,
+# com RUN_SEED=true, popula os dados de exemplo (3 marcas, 5 modelos, 5 carros).
+
+databases:
+  - name: cars-db
+    databaseName: cars
+    user: cars
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: cars-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: backend-test/Dockerfile
+    dockerContext: backend-test
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cars-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RUN_SEED
+        value: "true"
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5
+      # --- Secrets: preencher no dashboard do Render (não versionar) ---
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # URL do front no Vercel, ex.: https://seu-app.vercel.app
+      - key: CORS_ORIGINS
+        sync: false

@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DB_HOST="${DB_HOST:-db}"
-DB_PORT="${DB_PORT:-5432}"
-DB_USER="${POSTGRES_USER:-cars}"
-
-echo "Aguardando o banco de dados em ${DB_HOST}:${DB_PORT}..."
-until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" >/dev/null 2>&1; do
-  sleep 1
-done
-echo "Banco disponível."
+# Espera o banco via DATABASE_URL (portável entre docker-compose e Render).
+echo "Aguardando o banco de dados..."
+python -m scripts.wait_for_db
 
 echo "Aplicando migrations..."
 alembic upgrade head
@@ -19,5 +13,6 @@ if [ "${RUN_SEED:-false}" = "true" ]; then
   python -m scripts.seed
 fi
 
+# Render injeta PORT; localmente cai no 8000.
 echo "Iniciando a API..."
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+exec uvicorn app.main:app --host 0.0.0.0 --port "${PORT:-8000}"
