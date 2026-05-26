@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, status
 
 from app.api.deps import DbSession, PaginationParams, get_current_user
-from app.schemas.common import Page
+from app.schemas.common import Page, paginated
 from app.schemas.marca import MarcaCreate, MarcaRead, MarcaUpdate
 from app.services.marca_service import MarcaService
 
@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get("", response_model=Page[MarcaRead])
 async def list_marcas(db: DbSession, pagination: PaginationParams) -> dict:
     items, total = await MarcaService(db).list(pagination.skip, pagination.limit)
-    return {"items": items, "total": total, "skip": pagination.skip, "limit": pagination.limit}
+    return paginated(items, total, pagination.skip, pagination.limit)
 
 
 @router.get("/{marca_id}", response_model=MarcaRead)

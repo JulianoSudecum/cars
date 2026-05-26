@@ -1,7 +1,5 @@
 """Engine e fábrica de sessões assíncronas do SQLAlchemy."""
 
-from collections.abc import AsyncGenerator
-
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
@@ -24,9 +22,3 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False,
     autoflush=False,
 )
-
-
-async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    """Context-manager de sessão para uso fora do FastAPI (seed, scripts)."""
-    async with AsyncSessionLocal() as session:
-        yield session

@@ -33,13 +33,3 @@ class CarroRepository(BaseRepository[Carro]):
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
-
-    async def list_all_with_relations(
-        self, marca_id: int | None = None
-    ) -> Sequence[Carro]:
-        """Lista todos os carros (com modelo e marca) para o endpoint de front-end."""
-        stmt = select(Carro).options(_RELATIONS).order_by(Carro.id)
-        if marca_id is not None:
-            stmt = stmt.join(Carro.modelo).where(Modelo.marca_id == marca_id)
-        result = await self.session.execute(stmt)
-        return result.scalars().all()

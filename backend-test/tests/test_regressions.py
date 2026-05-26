@@ -106,3 +106,67 @@ async def test_money_serialized_as_number(client, carro):
     assert r.status_code == 200
     assert isinstance(r.json()["valor_anuncio"], (int, float))
     assert r.json()["valor_anuncio"] == 95000.0
+
+
+# PUT com vários campos NOT NULL = null deve listar todos na mensagem (não apenas o primeiro)
+async def test_put_carro_multiple_null_fields_listed(client, auth_headers, carro):
+    r = await client.put(
+        f"/api/v1/carros/{carro.id}",
+        json={"cor": None, "ano": None, "num_portas": None},
+        headers=auth_headers,
+    )
+    assert r.status_code == 422
+    msg = r.text
+    assert "ano" in msg and "cor" in msg and "num_portas" in msg
+
+
+# Paginação: skip/limit devolvem a fatia correta e o total é o do banco inteiro
+async def test_pagination_skip_limit(client, auth_headers, marca):
+    for i in range(5):
+        r = await client.post(
+            "/api/v1/modelos",
+            json={
+                "marca_id": marca.id,
+                "nome": f"MODELO-{i}",
+                "valor_fipe": "10000.00",
+            },
+            headers=auth_headers,
+        )
+        assert r.status_code == 201
+
+    r = await client.get("/api/v1/modelos?skip=1&limit=2")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["total"] == 5
+    assert body["skip"] == 1
+    assert body["limit"] == 2
+    assert len(body["items"]) == 2
+    nomes = [m["nome"] for m in body["items"]]
+    assert nomes == ["MODELO-1", "MODELO-2"]
+
+
+# Paginação: limit > total devolve todos; skip além do total devolve lista vazia
+async def test_pagination_edge_cases(client, auth_headers, marca):
+    for i in range(3):
+        await client.post(
+            "/api/v1/modelos",
+            json={
+                "marca_id": marca.id,
+                "nome": f"M-{i}",
+                "valor_fipe": "1.00",
+            },
+            headers=auth_headers,
+        )
+
+    r = await client.get("/api/v1/modelos?skip=0&limit=100")
+    assert r.json()["total"] == 3 and len(r.json()["items"]) == 3
+
+    r = await client.get("/api/v1/modelos?skip=10&limit=10")
+    assert r.json()["total"] == 3 and r.json()["items"] == []
+
+
+# Paginação: parâmetros inválidos viram 422 (skip < 0, limit fora de 1..200)
+async def test_pagination_invalid_params(client):
+    assert (await client.get("/api/v1/modelos?skip=-1")).status_code == 422
+    assert (await client.get("/api/v1/modelos?limit=0")).status_code == 422
+    assert (await client.get("/api/v1/modelos?limit=999")).status_code == 422

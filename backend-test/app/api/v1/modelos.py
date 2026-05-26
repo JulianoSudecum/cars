@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, status
 
 from app.api.deps import DbSession, PaginationParams, get_current_user
-from app.schemas.common import Page
+from app.schemas.common import Page, paginated
 from app.schemas.modelo import ModeloCreate, ModeloReadWithMarca, ModeloUpdate
 from app.services.modelo_service import ModeloService
 
@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get("", response_model=Page[ModeloReadWithMarca])
 async def list_modelos(db: DbSession, pagination: PaginationParams) -> dict:
     items, total = await ModeloService(db).list(pagination.skip, pagination.limit)
-    return {"items": items, "total": total, "skip": pagination.skip, "limit": pagination.limit}
+    return paginated(items, total, pagination.skip, pagination.limit)
 
 
 @router.get("/{modelo_id}", response_model=ModeloReadWithMarca)

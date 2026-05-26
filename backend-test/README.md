@@ -131,18 +131,21 @@ curl -X POST localhost:8000/api/v1/carros -H "Authorization: Bearer $TOKEN" \
 curl -X POST localhost:8000/api/v1/carros/1/description -H "Authorization: Bearer $TOKEN"
 
 # 4) Endpoint do front-end (público)
-curl localhost:8000/api/v1/frontend/models             # agrupado por marca
-curl "localhost:8000/api/v1/frontend/models?flat=true" # plano (compatível com o JSON externo)
+curl localhost:8000/api/v1/frontend/models   # agrupado por marca
+curl localhost:8000/api/v1/frontend/cars     # plano (compatível com o JSON externo)
 ```
 
 ### Endpoint para o front-end
 
-`GET /api/v1/frontend/models` retorna a listagem de **modelos agrupada por marca**, com
-os carros de cada modelo. Os itens de carro espelham as chaves dos JSONs de referência
-(`wswork.com.br/cars.json` e `cars_by_brand.json`) — `valor`, `brand`, `nome_modelo`,
-`timestamp_cadastro` em epoch e valores monetários como número — para consumo
-intercambiável. O parâmetro `?flat=true` retorna `{ "cars": [...] }`, idêntico ao
-formato externo; `?marca_id=` filtra por marca.
+- `GET /api/v1/frontend/models` — listagem de **modelos agrupada por marca**, com os
+  carros de cada modelo.
+- `GET /api/v1/frontend/cars` — listagem **plana** `{ "cars": [...] }`, idêntica ao
+  formato externo (`cars_by_brand.json`).
+
+Os itens de carro espelham as chaves dos JSONs de referência (`wswork.com.br/cars.json`
+e `cars_by_brand.json`) — `valor`, `brand`, `nome_modelo`, `timestamp_cadastro` em
+epoch e valores monetários como número — para consumo intercambiável. Ambos aceitam
+`?marca_id=` para filtrar por marca.
 
 **CORS** está habilitado (`CORS_ORIGINS` no `.env`) para o front-end hospedado em outro domínio.
 
