@@ -1,5 +1,9 @@
 /* eslint-disable */
-// GERADO por scripts/build-vercel-api.mjs a partir de functions/. Nao edite.
+// ============================================================
+// ARQUIVO GERADO AUTOMATICAMENTE — NÃO EDITE À MÃO.
+// Fonte: functions/*.ts
+// Gerador: scripts/build-vercel-api.mjs (rode `npm run build:functions`).
+// ============================================================
 
 // functions/profile-recommend.ts
 import { ZodError } from "zod";

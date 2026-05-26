@@ -13,28 +13,21 @@ export interface VehicleCardProps {
   className?: string;
 }
 
+/**
+ * Card semântico (`<article>`) com padrão "stretched-link": quando há
+ * `onSelect`, um `<button>` absoluto cobre toda a área do card. Assim o
+ * HTML continua válido (`<button>` não envolve flow content), a área
+ * clicável continua sendo o cartão inteiro e o leitor de tela anuncia um
+ * botão único com nome acessível.
+ */
 export function VehicleCard({ car, onSelect, highlight, className }: VehicleCardProps) {
   const clickable = Boolean(onSelect);
 
   return (
     <article
-      onClick={clickable ? () => onSelect?.(car) : undefined}
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onSelect?.(car);
-              }
-            }
-          : undefined
-      }
-      role={clickable ? 'button' : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      aria-label={clickable ? `Ver detalhes de ${car.brandName} ${car.nomeModelo}` : undefined}
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all',
-        clickable && 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md',
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all',
+        clickable && 'hover:-translate-y-0.5 hover:shadow-md focus-within:ring-2 focus-within:ring-brand-500',
         highlight && 'ring-2 ring-brand-500',
         className,
       )}
@@ -91,6 +84,15 @@ export function VehicleCard({ car, onSelect, highlight, className }: VehicleCard
           )}
         </div>
       </div>
+
+      {clickable && (
+        <button
+          type="button"
+          onClick={() => onSelect?.(car)}
+          aria-label={`Ver detalhes de ${car.brandName} ${car.nomeModelo}`}
+          className="absolute inset-0 z-10 cursor-pointer rounded-2xl focus:outline-none"
+        />
+      )}
     </article>
   );
 }

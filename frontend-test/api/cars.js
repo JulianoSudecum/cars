@@ -1,5 +1,9 @@
 /* eslint-disable */
-// GERADO por scripts/build-vercel-api.mjs a partir de functions/. Nao edite.
+// ============================================================
+// ARQUIVO GERADO AUTOMATICAMENTE — NÃO EDITE À MÃO.
+// Fonte: functions/*.ts
+// Gerador: scripts/build-vercel-api.mjs (rode `npm run build:functions`).
+// ============================================================
 
 // src/domain/constants.ts
 var UNKNOWN_BRAND_LABEL = "Marca n\xE3o informada";

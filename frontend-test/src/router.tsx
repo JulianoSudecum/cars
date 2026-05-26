@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from './app/RootLayout';
+import { RouteErrorBoundary } from './app/RouteErrorBoundary';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AssistantPage = lazy(() => import('./pages/AssistantPage'));
@@ -13,12 +14,20 @@ export const router = createBrowserRouter(
     {
       path: '/',
       element: <RootLayout />,
+      // Wrapper sem `element` cuja única função é hospedar o `errorElement`:
+      // se qualquer página filha quebrar em runtime, o boundary renderiza no
+      // slot do `<Outlet />`, preservando o header/footer do layout.
       children: [
-        { index: true, element: <HomePage /> },
-        { path: 'assistente', element: <AssistantPage /> },
-        { path: 'cadastrar', element: <NewCarPage /> },
-        { path: 'componente', element: <ComponentDocsPage /> },
-        { path: '*', element: <NotFoundPage /> },
+        {
+          errorElement: <RouteErrorBoundary />,
+          children: [
+            { index: true, element: <HomePage /> },
+            { path: 'assistente', element: <AssistantPage /> },
+            { path: 'cadastrar', element: <NewCarPage /> },
+            { path: 'componente', element: <ComponentDocsPage /> },
+            { path: '*', element: <NotFoundPage /> },
+          ],
+        },
       ],
     },
   ],
