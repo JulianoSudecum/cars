@@ -1,5 +1,6 @@
 """Schemas utilitários compartilhados."""
 
+from collections.abc import Sequence
 from decimal import Decimal
 from typing import Annotated, ClassVar, Generic, TypeVar
 
@@ -24,6 +25,11 @@ class Page(BaseModel, Generic[T]):
     total: int
     skip: int
     limit: int
+
+
+def paginated(items: Sequence[object], total: int, skip: int, limit: int) -> dict:
+    """Monta o dict da resposta paginada (convertido em Page[T] pelo response_model)."""
+    return {"items": list(items), "total": total, "skip": skip, "limit": limit}
 
 
 class Message(BaseModel):

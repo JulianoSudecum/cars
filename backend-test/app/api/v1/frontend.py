@@ -1,4 +1,4 @@
-"""Endpoint otimizado para consumo do front-end (listagem de modelos)."""
+"""Endpoints otimizados para consumo do front-end."""
 
 from typing import Annotated
 
@@ -13,18 +13,23 @@ router = APIRouter()
 
 @router.get(
     "/models",
-    response_model=FrontendModelsResponse | FlatCarsResponse,
+    response_model=FrontendModelsResponse,
     summary="Listagem de modelos agrupada por marca (com seus carros)",
 )
 async def list_models(
     db: DbSession,
     marca_id: Annotated[int | None, Query(description="Filtra por marca")] = None,
-    flat: Annotated[
-        bool,
-        Query(description="Formato plano {cars:[...]} compatível com cars_by_brand.json"),
-    ] = False,
-):
-    service = FrontendService(db)
-    if flat:
-        return await service.list_flat(marca_id)
-    return await service.list_grouped(marca_id)
+) -> FrontendModelsResponse:
+    return await FrontendService(db).list_grouped(marca_id)
+
+
+@router.get(
+    "/cars",
+    response_model=FlatCarsResponse,
+    summary="Listagem plana de carros (compatível com cars_by_brand.json)",
+)
+async def list_cars(
+    db: DbSession,
+    marca_id: Annotated[int | None, Query(description="Filtra por marca")] = None,
+) -> FlatCarsResponse:
+    return await FrontendService(db).list_flat(marca_id)

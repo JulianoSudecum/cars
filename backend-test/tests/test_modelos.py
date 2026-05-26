@@ -33,3 +33,30 @@ async def test_delete_modelo_with_carro_conflict(client, auth_headers, carro):
         f"/api/v1/modelos/{carro.modelo_id}", headers=auth_headers
     )
     assert r.status_code == 409
+
+
+async def test_update_modelo(client, auth_headers, modelo):
+    r = await client.put(
+        f"/api/v1/modelos/{modelo.id}",
+        json={"nome": "COROLLA XEi", "valor_fipe": "130000.00"},
+        headers=auth_headers,
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["nome"] == "COROLLA XEi"
+    assert body["valor_fipe"] == 130000.0
+    assert body["marca"]["id"] == modelo.marca_id
+
+
+async def test_update_modelo_marca_inexistente(client, auth_headers, modelo):
+    r = await client.put(
+        f"/api/v1/modelos/{modelo.id}",
+        json={"marca_id": 9999},
+        headers=auth_headers,
+    )
+    assert r.status_code == 404
+
+
+async def test_update_modelo_requires_auth(client, modelo):
+    r = await client.put(f"/api/v1/modelos/{modelo.id}", json={"nome": "X"})
+    assert r.status_code == 401

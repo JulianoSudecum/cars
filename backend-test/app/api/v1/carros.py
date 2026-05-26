@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, status
 from app.api.deps import AiService, DbSession, PaginationParams, get_current_user
 from app.core.exceptions import AIServiceUnavailableError
 from app.schemas.carro import CarroCreate, CarroReadWithModelo, CarroUpdate
-from app.schemas.common import Page
+from app.schemas.common import Page, paginated
 from app.services.carro_service import CarroService
 
 router = APIRouter()
@@ -17,7 +17,7 @@ router = APIRouter()
 @router.get("", response_model=Page[CarroReadWithModelo])
 async def list_carros(db: DbSession, pagination: PaginationParams) -> dict:
     items, total = await CarroService(db).list(pagination.skip, pagination.limit)
-    return {"items": items, "total": total, "skip": pagination.skip, "limit": pagination.limit}
+    return paginated(items, total, pagination.skip, pagination.limit)
 
 
 @router.get("/{carro_id}", response_model=CarroReadWithModelo)
