@@ -1,14 +1,30 @@
+import { z } from 'zod';
 import { curatedBrandName, inferBrandFromModel } from './brands';
 import { UNKNOWN_BRAND_LABEL } from './constants';
 import { parseJsonLenient } from './jsonRepair';
 import type { NormalizedCar, RawCar, RawCarByBrand } from './types';
 
-interface CarsPayload {
-  cars: RawCar[];
-}
-interface CarsByBrandPayload {
-  cars: RawCarByBrand[];
-}
+/**
+ * Schema do registro cru dos endpoints. Permanece tolerante (coerções e
+ * defaults) para não rejeitar a wswork por trivialidades como `valor` em
+ * string — mas exige `id` válido, sem o qual a normalização não faz sentido.
+ */
+const rawCarSchema = z.object({
+  id: z.coerce.number().int().nonnegative(),
+  timestamp_cadastro: z.coerce.number().optional(),
+  modelo_id: z.coerce.number().default(0),
+  ano: z.coerce.number().default(0),
+  combustivel: z.string().default(''),
+  num_portas: z.coerce.number().default(0),
+  cor: z.string().default(''),
+  nome_modelo: z.string().default(''),
+  valor: z.coerce.number().default(0),
+  brand: z.coerce.number().optional(),
+});
+
+const payloadSchema = z
+  .object({ cars: z.array(z.unknown()).default([]) })
+  .catch({ cars: [] });
 
 /**
  * Função pura (sem rede) que recebe o texto cru dos dois endpoints, repara o
@@ -19,16 +35,13 @@ interface CarsByBrandPayload {
  * server-side, contornando o CORS dos endpoints) e os testes unitários.
  */
 export function normalizeCatalog(carsText: string, byBrandText: string): NormalizedCar[] {
-  const carsPayload = parseJsonLenient<CarsPayload>(carsText);
-  const byBrandPayload = parseJsonLenient<CarsByBrandPayload>(byBrandText);
-
-  const carsList = Array.isArray(carsPayload.cars) ? carsPayload.cars : [];
-  const byBrandList = Array.isArray(byBrandPayload.cars) ? byBrandPayload.cars : [];
+  const carsList = parseRawCars(carsText);
+  const byBrandList = parseRawCars(byBrandText);
 
   // Estratégia primária de join: carId -> brandId
   const brandByCarId = new Map<number, number>();
   for (const car of byBrandList) {
-    if (typeof car.id === 'number' && typeof car.brand === 'number') {
+    if ('brand' in car && typeof car.brand === 'number') {
       brandByCarId.set(car.id, car.brand);
     }
   }
@@ -41,6 +54,34 @@ export function normalizeCatalog(carsText: string, byBrandText: string): Normali
   return Array.from(byId.values())
     .map((raw) => normalizeCar(raw, brandByCarId))
     .sort((a, b) => a.brandName.localeCompare(b.brandName, 'pt-BR'));
+}
+
+/**
+ * Faz o parse defensivo do envelope e de cada item. Itens individuais
+ * inválidos são descartados (com aviso no console), preservando o restante do
+ * catálogo — falha-aberta é melhor do que tela em branco.
+ */
+function parseRawCars(text: string): Array<RawCar | RawCarByBrand> {
+  let parsed: unknown;
+  try {
+    parsed = parseJsonLenient(text);
+  } catch (error) {
+    console.warn('[normalizeCatalog] payload não é JSON válido', error);
+    return [];
+  }
+  const envelope = payloadSchema.safeParse(parsed);
+  if (!envelope.success) return [];
+
+  const valid: Array<RawCar | RawCarByBrand> = [];
+  for (const item of envelope.data.cars) {
+    const result = rawCarSchema.safeParse(item);
+    if (result.success) {
+      valid.push(result.data as RawCar | RawCarByBrand);
+    } else {
+      console.warn('[normalizeCatalog] item inválido descartado', result.error.issues);
+    }
+  }
+  return valid;
 }
 
 function normalizeCar(raw: RawCar | RawCarByBrand, brandByCarId: Map<number, number>): NormalizedCar {
