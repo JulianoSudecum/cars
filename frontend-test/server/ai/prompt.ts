@@ -1,6 +1,6 @@
 import type { CatalogItem, UserProfile } from '../../src/domain/ai';
 
-/** System prompt fixo (estável → bom para prompt caching). */
+// Estável: vive no primeiro breakpoint de prompt caching.
 export const SYSTEM_PROMPT = `Você é um consultor automotivo brasileiro especialista em ajudar clientes a escolher o carro ideal.
 
 Sua tarefa: analisar o perfil do cliente e recomendar os veículos mais adequados ESTRITAMENTE a partir do catálogo fornecido.
@@ -13,7 +13,7 @@ Regras:
 - Selecione de 3 a 6 veículos, do mais ao menos recomendado. Se poucos se encaixam no perfil, recomende menos.
 - Responda sempre por meio da ferramenta recommend_vehicles.`;
 
-/** Serializa o catálogo de forma determinística (ordenado por id → cache estável). */
+// Ordenação por id torna a serialização determinística → cache estável.
 export function buildCatalogText(catalog: CatalogItem[]): string {
   const lines = catalog
     .slice()
@@ -25,7 +25,6 @@ export function buildCatalogText(catalog: CatalogItem[]): string {
   return `Catálogo de veículos disponíveis (recomende somente estes id):\n${lines.join('\n')}`;
 }
 
-/** Descreve o perfil do cliente em linguagem natural (conteúdo volátil). */
 export function buildProfileText(profile: UserProfile): string {
   const parts = [
     `Uso principal: ${profile.usage}`,

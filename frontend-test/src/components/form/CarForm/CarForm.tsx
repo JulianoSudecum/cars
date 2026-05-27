@@ -58,8 +58,7 @@ export function CarForm({ onSuccess }: CarFormProps) {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      // Simula uma persistência assíncrona (ex.: chamada de API) para
-      // exercitar os estados de carregamento da UI.
+      // Persistência fake para exercitar o estado de carregamento do botão.
       await delay(500);
       const car = createUserCar(values);
       addCar(car);

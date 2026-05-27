@@ -6,7 +6,6 @@ import { RouteErrorBoundary } from './app/RouteErrorBoundary';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AssistantPage = lazy(() => import('./pages/AssistantPage'));
 const NewCarPage = lazy(() => import('./pages/NewCarPage'));
-const ComponentDocsPage = lazy(() => import('./pages/ComponentDocsPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 export const router = createBrowserRouter(
@@ -24,7 +23,6 @@ export const router = createBrowserRouter(
             { index: true, element: <HomePage /> },
             { path: 'assistente', element: <AssistantPage /> },
             { path: 'cadastrar', element: <NewCarPage /> },
-            { path: 'componente', element: <ComponentDocsPage /> },
             { path: '*', element: <NotFoundPage /> },
           ],
         },

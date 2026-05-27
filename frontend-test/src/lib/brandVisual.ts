@@ -1,7 +1,6 @@
 /**
  * Como os dados não trazem imagens, derivamos uma identidade visual estável
- * por marca (gradiente + iniciais) a partir de um hash do nome. A paleta usa
- * tons profundos e sóbrios (estilo editorial), legíveis com texto claro.
+ * por marca (gradiente + iniciais) a partir de um hash do nome.
  */
 const PALETTE = [
   'from-stone-600 to-stone-800',
@@ -22,12 +21,10 @@ function hash(value: string): number {
   return h;
 }
 
-/** Classe de gradiente Tailwind estável para a marca. */
 export function brandGradient(name: string): string {
   return PALETTE[hash(name) % PALETTE.length];
 }
 
-/** Iniciais (até 2 letras) para o "selo" da marca. */
 export function brandInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return '?';

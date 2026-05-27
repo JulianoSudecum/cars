@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { brandGradient, brandInitials } from '@/lib/brandVisual';
@@ -13,7 +14,9 @@ interface RecommendationCardProps {
   onSelect?: (car: NormalizedCar) => void;
 }
 
-export function RecommendationCard({ car, score, reason, rank, onSelect }: RecommendationCardProps) {
+function RecommendationCardImpl({ car, score, reason, rank, onSelect }: RecommendationCardProps) {
+  const handleSelect = useCallback(() => onSelect?.(car), [car, onSelect]);
+
   return (
     <article className="flex animate-fade-in-up gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <div
@@ -66,7 +69,7 @@ export function RecommendationCard({ car, score, reason, rank, onSelect }: Recom
           {onSelect && (
             <button
               type="button"
-              onClick={() => onSelect(car)}
+              onClick={handleSelect}
               className="text-sm font-medium text-brand-600 hover:text-brand-700"
             >
               Ver detalhes
@@ -77,3 +80,5 @@ export function RecommendationCard({ car, score, reason, rank, onSelect }: Recom
     </article>
   );
 }
+
+export const RecommendationCard = memo(RecommendationCardImpl);

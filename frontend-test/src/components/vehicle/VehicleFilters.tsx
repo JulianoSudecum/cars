@@ -1,4 +1,5 @@
 import { Search, X } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
@@ -24,8 +25,14 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 export function VehicleFilters({ brands, resultCount }: VehicleFiltersProps) {
-  const { search, brand, fuel, sort, setSearch, setBrand, setFuel, setSort, reset } =
-    useFiltersStore();
+  const { search, brand, fuel, sort } = useFiltersStore(
+    useShallow((s) => ({ search: s.search, brand: s.brand, fuel: s.fuel, sort: s.sort })),
+  );
+  const setSearch = useFiltersStore((s) => s.setSearch);
+  const setBrand = useFiltersStore((s) => s.setBrand);
+  const setFuel = useFiltersStore((s) => s.setFuel);
+  const setSort = useFiltersStore((s) => s.setSort);
+  const reset = useFiltersStore((s) => s.reset);
   const hasActiveFilters =
     search !== '' || brand !== ALL || fuel !== ALL || sort !== 'relevance';
 

@@ -9,8 +9,8 @@ let cache: { data: NormalizedCar[]; expiresAt: number } | null = null;
 let inflight: Promise<NormalizedCar[]> | null = null;
 
 async function fetchText(url: string): Promise<string> {
-  // User-Agent/Accept explícitos: alguns servidores (e o host da wswork) recusam
-  // requisições sem User-Agent — comum a partir de IPs de data center (ex.: Vercel).
+  // wswork recusa requisições sem User-Agent — comum a partir de IPs de data
+  // center (ex.: Vercel).
   const res = await fetch(url, {
     headers: {
       'User-Agent':
@@ -34,9 +34,8 @@ async function fetchAndNormalize(): Promise<NormalizedCar[]> {
 }
 
 /**
- * Busca os endpoints oficiais server-side, normaliza e cacheia em memória.
- * O cache evita rebuscar a cada request; uma promise in-flight compartilhada
- * coalesce requisições concorrentes (evita "thundering herd" no miss).
+ * Cacheia em memória; uma promise in-flight compartilhada coalesce
+ * requisições concorrentes (evita thundering herd no cache miss).
  */
 export async function loadCatalog(): Promise<NormalizedCar[]> {
   if (cache && cache.expiresAt > Date.now()) return cache.data;

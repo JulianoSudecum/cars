@@ -21,7 +21,7 @@ function generateId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
-  // Fallback para contextos não-seguros (HTTP por IP) ou navegadores antigos.
+  // randomUUID exige contexto seguro (HTTPS/localhost).
   return `toast-${Date.now()}-${seq++}`;
 }
 
@@ -32,7 +32,6 @@ export const useToastStore = create<ToastState>((set) => ({
   dismiss: (id) => set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
 }));
 
-/** Helper imperativo para disparar toasts de qualquer lugar. */
 export function toast(input: {
   title: string;
   description?: string;

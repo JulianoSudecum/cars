@@ -2,12 +2,11 @@ import '@testing-library/jest-dom/vitest';
 import { afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
-// Garante DOM limpo entre os testes.
 afterEach(() => {
   cleanup();
 });
 
-// Polyfills que o jsdom não implementa, exigidos por componentes Radix UI.
+// Polyfills exigidos pelo Radix UI que o jsdom não implementa.
 if (typeof window !== 'undefined') {
   if (!Element.prototype.hasPointerCapture) {
     Element.prototype.hasPointerCapture = () => false;

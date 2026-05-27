@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { BookOpen, Car, Plus, Sparkles, type LucideIcon } from 'lucide-react';
+import { Car, Plus, Sparkles, type LucideIcon } from 'lucide-react';
 import { Spinner } from '@/components/ui/Spinner';
 import { cn } from '@/lib/cn';
 
@@ -15,8 +15,9 @@ const navItems: NavItem[] = [
   { to: '/', label: 'Catálogo', icon: Car, end: true },
   { to: '/assistente', label: 'Assistente IA', icon: Sparkles },
   { to: '/cadastrar', label: 'Cadastrar', icon: Plus },
-  { to: '/componente', label: 'Componente', icon: BookOpen },
 ];
+
+const currentYear = new Date().getFullYear();
 
 export function RootLayout() {
   return (
@@ -71,7 +72,7 @@ export function RootLayout() {
       </main>
 
       <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
-        AutoCatálogo · Desafio front-end · {new Date().getFullYear()}
+        AutoCatálogo · Desafio front-end · {currentYear}
       </footer>
     </div>
   );

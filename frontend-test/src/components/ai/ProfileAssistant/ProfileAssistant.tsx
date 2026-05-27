@@ -36,13 +36,14 @@ export function ProfileAssistant({ cars, onSelectCar }: ProfileAssistantProps) {
   const mutation = useProfileRecommendation();
 
   const carsById = useMemo(() => new Map(cars.map((c) => [c.id, c])), [cars]);
+  const catalog = useMemo(() => cars.map(toCatalogItem), [cars]);
   const canSubmit = form.canSubmit && cars.length > 0;
 
   const run = () => {
     if (!canSubmit) return;
     mutation.mutate({
       profile: form.toProfile(),
-      catalog: cars.map(toCatalogItem),
+      catalog,
     });
   };
 

@@ -140,7 +140,7 @@ A normalização vive em `src/domain/normalizeCatalog.ts` (função pura, compar
 
 ##  Componente reutilizável
 
-`<VehicleList>` é o componente extraído para reuso. Documentação completa (props, comportamento, exemplos, customização) em **[`docs/VehicleList.md`](./docs/VehicleList.md)** e demonstração interativa na rota `/componente`.
+`<VehicleList>` é o componente extraído para reuso. Documentação completa (props, comportamento, exemplos, customização) em **[`docs/VehicleList.md`](./docs/VehicleList.md)**.
 
 ---
 

@@ -4,8 +4,6 @@ Listagem de veículos **agrupada por marca** (ou por qualquer chave), responsiva
 
 É um componente **apresentacional puro**: ele não busca dados nem conhece React Query, localStorage ou rotas. Recebe a lista e os estados de UI por props. Isso o torna reutilizável em qualquer tela ou projeto — basta fornecer os dados no formato `NormalizedCar`.
 
-> Há uma demonstração interativa rodando em `/componente` na aplicação.
-
 ---
 
 ## Importação

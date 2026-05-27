@@ -6,8 +6,8 @@ import { recommendRequestSchema, toolOutputSchema } from './schema';
 const MAX_RECOMMENDATIONS = 6;
 
 /**
- * Núcleo agnóstico de framework: valida a entrada, chama o modelo, valida a
- * saída estruturada e descarta carIds que não existem no catálogo (anti-alucinação).
+ * Núcleo agnóstico de framework. Filtra carIds ausentes no catálogo para
+ * impedir alucinações do modelo.
  */
 export async function handleProfileRecommend(body: unknown): Promise<ProfileRecommendResponse> {
   const { profile, catalog } = recommendRequestSchema.parse(body);

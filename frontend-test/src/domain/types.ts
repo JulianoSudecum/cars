@@ -1,7 +1,3 @@
-/* ──────────────────────────────────────────────────────────────
-   Tipos crus (formato exato dos endpoints wswork)
-   ────────────────────────────────────────────────────────────── */
-
 /** Registro como vem de https://wswork.com.br/cars.json */
 export interface RawCar {
   id: number;
@@ -20,11 +16,6 @@ export interface RawCarByBrand extends RawCar {
   brand: number;
 }
 
-/* ──────────────────────────────────────────────────────────────
-   Tipo normalizado usado por toda a aplicação
-   ────────────────────────────────────────────────────────────── */
-
-/** Origem do registro: catálogo remoto ou cadastro local do usuário. */
 export type CarSource = 'remote' | 'local';
 
 export interface NormalizedCar {
@@ -35,11 +26,10 @@ export interface NormalizedCar {
   combustivel: string;
   numPortas: number;
   cor: string;
-  /** Valor do anúncio em reais (inteiro). */
   valor: number;
-  /** Quilometragem (apenas em cadastros locais; os endpoints não trazem). */
+  /** Apenas em cadastros locais; os endpoints não trazem. */
   quilometragem?: number;
-  /** Descrição/observações (apenas em cadastros locais). */
+  /** Apenas em cadastros locais. */
   descricao?: string;
   timestampCadastro?: number;
   brandId: number | null;
