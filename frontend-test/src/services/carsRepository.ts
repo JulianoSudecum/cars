@@ -8,13 +8,7 @@ function titleCase(value: string): string {
     .replace(/(^|\s)\S/g, (m) => m.toUpperCase());
 }
 
-/**
- * Converte os dados validados do formulário em um `NormalizedCar` (cadastro
- * local). Normaliza marca/cor para Title Case a fim de agrupar de forma
- * consistente com o catálogo. A persistência em si fica no `userCarsStore`.
- */
 let localSeq = 0;
-/** Id local único e grande o bastante para nunca colidir com ids remotos. */
 function nextLocalId(): number {
   return Date.now() * 100 + (localSeq++ % 100);
 }

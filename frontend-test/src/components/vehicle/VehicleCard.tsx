@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import { ArrowRight, Calendar, DoorOpen, Fuel, Gauge, Palette } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { brandGradient, brandInitials } from '@/lib/brandVisual';
@@ -20,8 +21,9 @@ export interface VehicleCardProps {
  * clicável continua sendo o cartão inteiro e o leitor de tela anuncia um
  * botão único com nome acessível.
  */
-export function VehicleCard({ car, onSelect, highlight, className }: VehicleCardProps) {
+function VehicleCardImpl({ car, onSelect, highlight, className }: VehicleCardProps) {
   const clickable = Boolean(onSelect);
+  const handleClick = useCallback(() => onSelect?.(car), [car, onSelect]);
 
   return (
     <article
@@ -88,7 +90,7 @@ export function VehicleCard({ car, onSelect, highlight, className }: VehicleCard
       {clickable && (
         <button
           type="button"
-          onClick={() => onSelect?.(car)}
+          onClick={handleClick}
           aria-label={`Ver detalhes de ${car.brandName} ${car.nomeModelo}`}
           className="absolute inset-0 z-10 cursor-pointer rounded-2xl focus:outline-none"
         />
@@ -96,3 +98,5 @@ export function VehicleCard({ car, onSelect, highlight, className }: VehicleCard
     </article>
   );
 }
+
+export const VehicleCard = memo(VehicleCardImpl);

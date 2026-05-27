@@ -3,13 +3,6 @@ import { ZodError } from 'zod';
 import { handleProfileRecommend } from '../server/ai/handler';
 import { MissingApiKeyError } from '../server/ai/anthropic';
 
-/**
- * `POST /api/profile-recommend` — serverless function (Vercel).
- *
- * Assistente de IA: recebe perfil + catálogo, chama o modelo (Claude) com a
- * chave que vive apenas no servidor e devolve recomendações estruturadas. Mesmo
- * núcleo (`handleProfileRecommend`) usado pelo BFF Express em desenvolvimento.
- */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Método não permitido.' });

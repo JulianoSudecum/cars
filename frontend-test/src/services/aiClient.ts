@@ -9,7 +9,6 @@ export class AiRequestError extends Error {
   }
 }
 
-/** Chama o BFF de IA para obter recomendações a partir do perfil + catálogo. */
 export async function requestProfileRecommendation(
   payload: ProfileRecommendRequest,
   signal?: AbortSignal,
@@ -27,7 +26,7 @@ export async function requestProfileRecommendation(
       const data = (await res.json()) as { error?: string };
       if (data?.error) message = data.error;
     } catch {
-      // resposta sem corpo JSON — mantém mensagem padrão
+      // sem corpo JSON
     }
     throw new AiRequestError(message, res.status);
   }

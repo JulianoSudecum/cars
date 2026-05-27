@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT } from './prompt';
 
-/** Lançado quando a chave da API não está configurada. */
 export class MissingApiKeyError extends Error {
   constructor() {
     super('ANTHROPIC_API_KEY não configurada.');
@@ -9,21 +8,19 @@ export class MissingApiKeyError extends Error {
   }
 }
 
-/** Modelo padrão (configurável por env). Veja a skill claude-api. */
 export const MODEL = process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-7';
 
 let client: Anthropic | null = null;
 
 function getClient(): Anthropic {
-  // .trim() torna a leitura robusta a espaços/quebras de linha acidentais na
-  // variável de ambiente (ex.: um \r ao configurar a chave via CLI no Windows).
+  // .trim(): tolera \r e espaços acidentais que aparecem ao definir a chave
+  // pela CLI no Windows.
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) throw new MissingApiKeyError();
   if (!client) client = new Anthropic({ apiKey });
   return client;
 }
 
-/** Tool de saída estruturada — força o modelo a responder no formato esperado. */
 const RECOMMEND_TOOL: Anthropic.Tool = {
   name: 'recommend_vehicles',
   description:
@@ -53,9 +50,8 @@ const RECOMMEND_TOOL: Anthropic.Tool = {
 };
 
 /**
- * Chama o modelo com tool_choice forçado e prompt caching:
- * breakpoint 1 no system (tools + instruções estáveis), breakpoint 2 no
- * catálogo (estável entre consultas); o perfil fica após o último breakpoint.
+ * Prompt caching com dois breakpoints estáveis: system (tools + instruções) e
+ * catálogo. O perfil fica após o último breakpoint, fora do cache.
  */
 export async function callRecommend(
   catalogText: string,

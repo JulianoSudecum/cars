@@ -20,13 +20,11 @@ const profileSchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-/** Valida o corpo recebido em POST /api/profile-recommend. */
 export const recommendRequestSchema = z.object({
   profile: profileSchema,
   catalog: z.array(catalogItemSchema).min(1).max(200),
 });
 
-/** Valida a saída estruturada (tool_use) retornada pelo modelo. */
 export const toolOutputSchema = z.object({
   recommendations: z.array(
     z.object({

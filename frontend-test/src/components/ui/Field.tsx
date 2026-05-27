@@ -18,10 +18,6 @@ interface FieldProps {
   children: (props: FieldRenderProps) => ReactNode;
 }
 
-/**
- * Wrapper de campo de formulário com acessibilidade pronta:
- * associa label, hint e mensagem de erro ao controle via aria-describedby.
- */
 export function Field({ label, error, hint, required, className, children }: FieldProps) {
   const id = useId();
   const errorId = `${id}-error`;

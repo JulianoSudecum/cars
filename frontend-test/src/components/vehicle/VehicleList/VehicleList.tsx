@@ -14,11 +14,6 @@ const columnClasses: Record<VehicleListColumns, string> = {
   4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
 };
 
-/**
- * Listagem de veículos agrupada e responsiva. Componente *apresentacional*:
- * não busca dados — recebe tudo via props, o que o torna reutilizável em
- * qualquer tela. Veja `docs/VehicleList.md`.
- */
 export function VehicleList({
   cars,
   groupBy = 'brand',

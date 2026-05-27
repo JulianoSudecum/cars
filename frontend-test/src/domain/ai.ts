@@ -1,17 +1,11 @@
-/* Contrato compartilhado entre o cliente (aiClient) e o BFF (server/ai). */
+/** Contrato compartilhado entre o cliente (aiClient) e o BFF (server/ai). */
 
 export interface UserProfile {
-  /** Uso principal (cidade, estrada, família, trabalho, primeiro carro…). */
   usage: string;
-  /** Faixa de orçamento (rótulo legível). */
   budget: string;
-  /** Prioridades do cliente (economia, espaço, conforto, preço…). */
   priorities: string[];
-  /** Combustível preferido (opcional). */
   fuelPreference?: string;
-  /** Quantidade de pessoas transportadas com frequência (opcional). */
   passengers?: string;
-  /** Observações em texto livre (opcional). */
   notes?: string;
 }
 
@@ -31,7 +25,6 @@ export interface Recommendation {
   carId: number;
   /** Adequação ao perfil, de 0 a 100. */
   score: number;
-  /** Justificativa personalizada em português. */
   reason: string;
 }
 
@@ -42,6 +35,5 @@ export interface ProfileRecommendRequest {
 
 export interface ProfileRecommendResponse {
   recommendations: Recommendation[];
-  /** Modelo usado (informativo para a UI). */
   model: string;
 }

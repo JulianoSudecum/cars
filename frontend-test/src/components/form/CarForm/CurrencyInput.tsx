@@ -8,7 +8,6 @@ interface CurrencyInputProps extends Omit<InputProps, 'value' | 'onChange'> {
   onChange: (value: number | undefined) => void;
 }
 
-/** Input de moeda (BRL, sem centavos) controlado: mantém número, exibe formatado. */
 export const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(function CurrencyInput(
   { value, onChange, ...props },
   ref,

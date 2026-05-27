@@ -3,7 +3,6 @@ import type { NormalizedCar } from '@/domain/types';
 import { ALL, useFiltersStore } from '@/store/filtersStore';
 import { useDebounce } from './useDebounce';
 
-/** Aplica busca textual, filtros e ordenação do `filtersStore` sobre a lista. */
 export function useFilteredCars(cars: NormalizedCar[]): NormalizedCar[] {
   const search = useFiltersStore((s) => s.search);
   const brand = useFiltersStore((s) => s.brand);
@@ -26,11 +25,11 @@ export function useFilteredCars(cars: NormalizedCar[]): NormalizedCar[] {
 
     switch (sort) {
       case 'price-asc':
-        return [...filtered].sort((a, b) => a.valor - b.valor);
+        return filtered.sort((a, b) => a.valor - b.valor);
       case 'price-desc':
-        return [...filtered].sort((a, b) => b.valor - a.valor);
+        return filtered.sort((a, b) => b.valor - a.valor);
       case 'year-desc':
-        return [...filtered].sort((a, b) => b.ano - a.ano);
+        return filtered.sort((a, b) => b.ano - a.ano);
       default:
         return filtered;
     }

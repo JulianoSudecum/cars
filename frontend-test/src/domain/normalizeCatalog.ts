@@ -27,18 +27,14 @@ const payloadSchema = z
   .catch({ cars: [] });
 
 /**
- * Função pura (sem rede) que recebe o texto cru dos dois endpoints, repara o
- * JSON inválido, normaliza e faz o join por marca em três estratégias:
- * `brand` explícito → join por id → inferência por modelo → "não informada".
- *
- * Vive em `domain` para ser compartilhada entre o BFF (que faz o fetch
- * server-side, contornando o CORS dos endpoints) e os testes unitários.
+ * Função pura (sem rede): recebe o texto cru dos dois endpoints, repara o
+ * JSON, normaliza e resolve a marca em cascata
+ * (`brand` explícito → join por id → inferência por modelo → "não informada").
  */
 export function normalizeCatalog(carsText: string, byBrandText: string): NormalizedCar[] {
   const carsList = parseRawCars(carsText);
   const byBrandList = parseRawCars(byBrandText);
 
-  // Estratégia primária de join: carId -> brandId
   const brandByCarId = new Map<number, number>();
   for (const car of byBrandList) {
     if ('brand' in car && typeof car.brand === 'number') {
@@ -46,7 +42,7 @@ export function normalizeCatalog(carsText: string, byBrandText: string): Normali
     }
   }
 
-  // União dos dois endpoints (by-brand pode conter carros ausentes em cars.json).
+  // by-brand pode conter carros ausentes em cars.json — fazemos união por id.
   const byId = new Map<number, RawCar | RawCarByBrand>();
   for (const car of carsList) byId.set(car.id, car);
   for (const car of byBrandList) if (!byId.has(car.id)) byId.set(car.id, car);
@@ -104,9 +100,9 @@ function normalizeCar(raw: RawCar | RawCarByBrand, brandByCarId: Map<number, num
 }
 
 /**
- * Resolve a marca em ordem: id curado → inferência por modelo → id não-curado
- * ("Marca {id}") → "não informada". Assim, um id presente porém desconhecido
- * não bloqueia a inferência pelo nome do modelo.
+ * Ordem: id curado → inferência por modelo → id não-curado ("Marca {id}") →
+ * "não informada". Um id presente porém desconhecido não deve bloquear a
+ * inferência pelo nome do modelo.
  */
 function resolveBrand(
   raw: RawCar | RawCarByBrand,
@@ -134,8 +130,8 @@ function toInt(value: unknown): number {
 
 /**
  * Os endpoints trazem preços no formato brasileiro de milhar (ex.: 50.000),
- * que o JSON.parse converte para 50.0. Reinterpretamos valores "pequenos"
- * (< 1000) como milhares — premissa documentada no README.
+ * que o JSON.parse converte para 50.0. Reinterpretamos valores < 1000 como
+ * milhares — premissa documentada no README.
  */
 function normalizeRemoteValue(value: unknown): number {
   const n = typeof value === 'number' ? value : Number(value);

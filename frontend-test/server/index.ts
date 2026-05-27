@@ -20,7 +20,6 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', ai: Boolean(process.env.ANTHROPIC_API_KEY) });
 });
 
-// Proxy/agregador do catálogo (resolve o CORS dos endpoints da wswork).
 app.get('/api/cars', async (_req, res) => {
   try {
     const cars = await loadCatalog();
@@ -31,7 +30,6 @@ app.get('/api/cars', async (_req, res) => {
   }
 });
 
-// Assistente de IA: análise de perfil → recomendação de veículos.
 app.post('/api/profile-recommend', async (req, res) => {
   try {
     const result = await handleProfileRecommend(req.body);
@@ -50,7 +48,7 @@ app.post('/api/profile-recommend', async (req, res) => {
   }
 });
 
-// Qualquer rota /api não tratada retorna 404 JSON (não cai no fallback de SPA).
+// /api não tratada retorna 404 JSON em vez de cair no fallback de SPA.
 app.all('/api/*', (_req, res) => {
   res.status(404).json({ error: 'Rota da API não encontrada.' });
 });
